@@ -24,8 +24,6 @@ def relativeurl_to_absolute(url):
 def consolidate_dfs(dfs):
     return pd.concat(dfs, axis=0)
 
-url = r'http://www.basketball-reference.com/players/a/anthoca01.html'
-
 def get_backtobacks(iterable):
     ''' Returns True if a team has played a game in the previous 36 hours '''
     l = pd.to_datetime(iterable)
