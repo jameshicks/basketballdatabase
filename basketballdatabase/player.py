@@ -15,7 +15,7 @@ class Player(object):
     def __init__(self, name):
         self.name = name
         self._gamelog = None
-        self.last_updated = datetime.min()
+        self.last_updated = datetime.min
         self._player_page = search_player(self.name)
 
     def __repr__(self):
