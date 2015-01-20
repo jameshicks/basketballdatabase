@@ -1,3 +1,4 @@
+from itertools import ifilter
 from datetime import timedelta, datetime
 
 import pandas as pd
@@ -32,16 +33,20 @@ class Player(object):
             self._gamelog = self.__get_gamelog()
 
 
-    def __links_to_player_season_gamelogs(self, page):
+    def __links_to_player_season_gamelogs(self, page, after=None):
         pg = requests.get(self._player_url)
         pg.raise_for_status()
 
         soup = BeautifulSoup(pg.text)
         
-        links = (link.get('href') for link in soup.find_all('a'))
-        links = sorted(set(link for link in links if 'gamelog' in link))
+        links = (link for link in soup.find_all('a')
+                 if 'gamelog' in link.get('href'))
+        if after:
+            links = ifilter(lambda x: x.text >= after)
+
+        links = sorted(set(links))
         for link in links:
-            yield relativeurl_to_absolute(link)
+            yield relativeurl_to_absolute(link.get('href'))
 
 
     def __get_gamelog(self):
