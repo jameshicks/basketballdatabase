@@ -16,8 +16,8 @@ class Player(object):
         self.name = name
         self._gamelog = None
         self.last_updated = datetime.min
-        self._player_page = search_player(self.name)
-
+        self._player_url = search_player(self.name)
+        
     def __repr__(self):
         return 'Player: {}'.format(self.name)
 
@@ -31,8 +31,12 @@ class Player(object):
         if (datetime.now() - self.last_updated) >= minimum_update_interval:
             self._gamelog = self.__get_gamelog()
 
+
     def __links_to_player_season_gamelogs(self, page):
-        soup = BeautifulSoup(self._player_page)
+        pg = requests.get(self._player_url)
+        pg.raise_for_status()
+
+        soup = BeautifulSoup(pg.text)
         
         links = (link.get('href') for link in soup.find_all('a'))
         links = sorted(set(link for link in links if 'gamelog' in link))
@@ -41,7 +45,9 @@ class Player(object):
 
 
     def __get_gamelog(self):
-        playerpage = self._player_page
+        
+        playerpage = self._player_url
+
         seasons = consolidate_dfs(
             self.get_player_season_data_from_url(url)
             for url in self.__links_to_player_season_gamelogs(playerpage))

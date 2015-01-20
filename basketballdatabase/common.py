@@ -36,12 +36,13 @@ def get_backtobacks(iterable):
 
 @throttled
 def search_player(playername):
+    ''' Returns the player data URL '''
     searchurl = "http://www.basketball-reference.com/search/search.fcgi"
     pg = requests.get(searchurl, params={'search': playername})
     pg.raise_for_status()
-    soup = BeautifulSoup(pg.text)
-    if soup.find(id='totals'):
-        return pg.text
+
+    if 'player' in pg.url:
+        return pg.url
     else:
         raise ValueError('No player or non-unique player: {}'.format(playername))
         soup = BeautifulSoup(pg.text)
