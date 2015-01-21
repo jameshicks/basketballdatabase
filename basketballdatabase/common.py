@@ -46,3 +46,6 @@ def search_player(playername):
     else:
         raise ValueError('No player or non-unique player: {}'.format(playername))
         soup = BeautifulSoup(pg.text)
+
+class ParseError(Exception):
+    pass

@@ -7,7 +7,7 @@ from bs4 import BeautifulSoup
 
 from common import throttled, relativeurl_to_absolute, get_backtobacks
 from common import consolidate_dfs, search_player
-
+from common import ParseError
 
 #### 
 minimum_update_interval = timedelta(hours=10)
@@ -70,6 +70,13 @@ class Player(object):
 
         stats['Playoff'] = False
 
+        # Find the season
+        season = soup.find(lambda x: x.name =='h1' and 'Game Log' in x.string)
+        if not season:
+            raise ParseError("Couldn't determine season!")
+        season = season.string.split()[-3]
+        stats['Season'] = season
+        
         if not soup.find(id='pgl_basic_playoffs'):
             return stats
         else:
@@ -77,8 +84,9 @@ class Player(object):
             playoffadv = self.process_gamelog(soup.find(id='pgl_advanced_playoffs'))
             playoffstats = self.merge_basic_and_advanced(playoffbasic, playoffadv)
             playoffstats['Playoff'] = True
+            playoffstats['Season'] = season
             stats = pd.concat([stats, playoffstats], axis=0)
-        
+
         return stats
 
     def merge_basic_and_advanced(self,basic, advanced):
