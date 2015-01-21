@@ -28,12 +28,17 @@ class Player(object):
             self._gamelog = self.__get_gamelog()
         return self._gamelog
 
-    def update(self):
-        if (datetime.now() - self.last_updated) >= minimum_update_interval:
-            self._gamelog = self.__get_gamelog()
+    def update(self, force=False):
+        if (not force) and (datetime.now() - self.last_updated) < minimum_update_interval:
+            #self._gamelog = self.__get_gamelog()
+            return
+        curseason = self.gamelog.Season.max()
+        prevseasons = self.gamelog[self.gamelog.Season < curseason]
+        newseasons = self.__get_gamelog(after=curseason)
+        self._gamelog = consolidate_dfs([prevseasons, newseasons])
+        self._gamelog.sort('Date', inplace=True)
 
-
-    def __links_to_player_season_gamelogs(self, page, after=None):
+    def __links_to_player_season_gamelogs(self, after=None):
         pg = requests.get(self._player_url)
         pg.raise_for_status()
 
@@ -42,21 +47,22 @@ class Player(object):
         links = (link for link in soup.find_all('a')
                  if 'gamelog' in link.get('href'))
         if after:
-            links = ifilter(lambda x: x.text >= after)
+            links = ifilter(lambda x: x.text >= after, links)
 
         links = sorted(set(links))
         for link in links:
             yield relativeurl_to_absolute(link.get('href'))
 
 
-    def __get_gamelog(self):
+    def __get_gamelog(self, after=None):
         
         playerpage = self._player_url
 
         seasons = consolidate_dfs(
             self.get_player_season_data_from_url(url)
-            for url in self.__links_to_player_season_gamelogs(playerpage))
+            for url in self.__links_to_player_season_gamelogs(after=after))
         self.last_updated = datetime.now()
+        seasons.sort('Date', inplace=True)
         return seasons
 
     @throttled
