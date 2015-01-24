@@ -74,6 +74,7 @@ class Player(object):
         advanced = self.process_gamelog(soup.find(id='pgl_advanced'))
         stats = self.merge_basic_and_advanced(basicstats, advanced)
 
+        stats['Player'] = self.name
         stats['Playoff'] = False
 
         # Find the season
