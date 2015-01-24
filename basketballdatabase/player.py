@@ -15,6 +15,8 @@ minimum_update_interval = timedelta(hours=10)
 class Player(object):
     def __init__(self, name):
         self.name = name
+        self.updated_name = False
+
         self._gamelog = None
         self.last_updated = datetime.min
         self._player_url = search_player(self.name)
@@ -43,7 +45,12 @@ class Player(object):
         pg.raise_for_status()
 
         soup = BeautifulSoup(pg.text)
-        
+
+        # Update the player name
+        if not self.updated_name:
+            self.name = soup.find('h1').string
+            self.updated_name = True
+
         links = (link for link in soup.find_all('a')
                  if 'gamelog' in link.get('href'))
         if after:
