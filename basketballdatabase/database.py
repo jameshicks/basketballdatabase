@@ -5,11 +5,12 @@ from player import Player
 
 class Database(object):
     def __init__(self):
-        self.players = set()
+        self.players = dict()
 
     def search_player(self, name):
-        p = Player(name)
-        self.players.add(p)
+        if name not in self.players:
+            p = Player(name)
+            self.players[p.name] = p
         return p
 
     def save(self, filename):
