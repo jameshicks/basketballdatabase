@@ -1,3 +1,6 @@
+import cPickle as pickle
+import gzip
+
 from urlparse import urljoin
 from time import sleep as delay
 from functools import wraps
@@ -6,6 +9,9 @@ import requests
 import pandas as pd
 from bs4 import BeautifulSoup
 
+def load(filename):
+    with gzip.open(filename) as f:
+        return pickle.load(f)
 
 time_between_requests = .5
 def throttled(f):
