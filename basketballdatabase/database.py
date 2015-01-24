@@ -17,5 +17,9 @@ class Database(object):
         with gzip.open(filename, 'w') as f:
             pickle.dump(self, f, pickle.HIGHEST_PROTOCOL)
 
+    def update(self):
+        for player in self.players.values():
+            player.update()
+
 if __name__ == '__main__':
     import IPython; IPython.embed()
