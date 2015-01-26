@@ -6,6 +6,7 @@ from time import sleep as delay
 from functools import wraps
 
 import requests
+import numpy as np
 import pandas as pd
 from bs4 import BeautifulSoup
 
@@ -18,7 +19,7 @@ def throttled(f):
     ''' A function for throttling http requests '''
     @wraps(f)
     def wrapper(*args, **kwargs):
-        print 'Throttling request: {}:'.format(*args)
+        print 'Throttling request: {}:'.format(args)
         delay(time_between_requests)
         return f(*args, **kwargs)
     return wrapper
@@ -52,6 +53,19 @@ def search_player(playername):
     else:
         raise ValueError('No player or non-unique player: {}'.format(playername))
         soup = BeautifulSoup(pg.text)
+
+def streak(iterable, predicate):
+    iterable = list(int(x) for x in iterable)
+    strk = np.zeros(len(iterable), dtype=np.uint8)
+
+    prev = False
+    for i, x in enumerate(iterable):
+        v = 1 if predicate(x) else 0 
+        if v and i > 0:
+            v += strk[i-1]
+        strk[i] = v
+
+    return strk
 
 class ParseError(Exception):
     pass
