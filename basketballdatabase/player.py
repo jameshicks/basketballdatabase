@@ -39,6 +39,7 @@ class Player(object):
         newseasons = self.__get_gamelog(after=curseason)
         self._gamelog = consolidate_dfs([prevseasons, newseasons])
         self._gamelog.sort('Date', inplace=True)
+        self._gamelog.set_index('Date', drop=False)
 
     def __links_to_player_season_gamelogs(self, after=None):
         pg = requests.get(self._player_url)
