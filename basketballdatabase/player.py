@@ -148,6 +148,9 @@ class Player(object):
         # There should only be one table in the tag
         df = pd.io.html.read_html(str(tag))[0]
     
+        # Force date to a pandas datetime object
+        df.Date = pd.to_datetime(df.Date, coerce=True)
+
         # Minutes played gets interpreted as a string 
         df.MP = pd.to_timedelta([duration_fixer(x) for x in df.MP])
         
