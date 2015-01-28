@@ -42,6 +42,10 @@ class Player(object):
         self._gamelog.sort('Date', inplace=True)
         self._gamelog.set_index('Date', drop=False, inplace=True)
 
+    def clear(self):
+        self.__gamelog = None
+        self.last_updated =datetime.min
+
     def __links_to_player_season_gamelogs(self, after=None):
         pg = requests.get(self._player_url)
         pg.raise_for_status()
