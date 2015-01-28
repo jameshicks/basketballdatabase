@@ -50,7 +50,7 @@ class Player(object):
 
         # Update the player name
         if not self.updated_name:
-            self.name = soup.find('h1').string
+            self.name = str(soup.find('h1').string)
             self.updated_name = True
 
         links = (link for link in soup.find_all('a')
