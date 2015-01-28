@@ -166,7 +166,7 @@ class Player(object):
                   inplace=True)
 
         # The 'Away' column has an '@' if it is away, else nothing'
-        df.Away = np.array(df.Away == '@', dtype=np.uint8)
+        df.Away = np.array([(pd.notnull(x) and x == '@') for x in df.Away], dtype=np.uint8)
     
         # Get the win/loss margin in numeric format
         df.Margin = [margin_parser(margin) for margin in df.Margin]
