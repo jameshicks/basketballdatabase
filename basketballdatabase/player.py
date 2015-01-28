@@ -84,7 +84,7 @@ class Player(object):
         stats = self.merge_basic_and_advanced(basicstats, advanced)
 
         stats['Player'] = self.name
-        stats['Playoff'] = False
+        stats['Playoff'] = 0
 
         # Find the season
         season = soup.find(lambda x: x.name =='h1' and 'Game Log' in x.string)
@@ -99,7 +99,7 @@ class Player(object):
             playoffbasic = self.process_gamelog(soup.find(id='pgl_basic_playoffs'))
             playoffadv = self.process_gamelog(soup.find(id='pgl_advanced_playoffs'))
             playoffstats = self.merge_basic_and_advanced(playoffbasic, playoffadv)
-            playoffstats['Playoff'] = True
+            playoffstats['Playoff'] = 1
             playoffstats['Season'] = season
             stats = pd.concat([stats, playoffstats], axis=0)
 
@@ -162,7 +162,7 @@ class Player(object):
                   inplace=True)
 
         # The 'Away' column has an '@' if it is away, else nothing'
-        df.Away = df.Away == '@'
+        df.Away = np.array(df.Away == '@', dtype=np.uint8)
     
         # Get the win/loss margin in numeric format
         df.Margin = [margin_parser(margin) for margin in df.Margin]
@@ -180,7 +180,7 @@ class Player(object):
             df['2P%'] = df['2P'] / df['2PA']
 
         # A column for when a player is on a back-to-back
-        df['back2back'] = get_backtobacks(df.Date)
+        df['back2back'] = np.array(get_backtobacks(df.Date), dtype=np.uint8)
 
         # Set the index to the date
         df = df.set_index('Date', drop=False)
