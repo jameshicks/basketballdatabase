@@ -2,6 +2,7 @@ from itertools import ifilter
 from datetime import timedelta, datetime
 
 import pandas as pd
+import numpy as np
 import requests
 from bs4 import BeautifulSoup
 
@@ -137,6 +138,12 @@ class Player(object):
             y, d = age.split('-')
             return int(y) + float(d) / 365.242
  
+        def fix_gs(gs):
+            if gs in {'0', '1', 0, 1}:
+                return int(gs)
+            else:
+                return np.nan
+
         tag = delete_multiheader(tag)
         # There should only be one table in the tag
         df = pd.io.html.read_html(str(tag))[0]
@@ -159,6 +166,8 @@ class Player(object):
     
         # Age is given as Years-Days, I'll convert to decimal
         df.Age = [age_parser(age) for age in df.Age]
+
+        df.GS = [fix_gs(gs) for gs in df.GS]
 
         # Get 2P statistics for basic stats
         # True shooting percentage (TS%) is not in the basic stats 
