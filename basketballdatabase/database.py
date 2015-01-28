@@ -7,6 +7,9 @@ class Database(object):
     def __init__(self):
         self.players = dict()
 
+    def nplayers(self):
+        return len(self.players)
+
     def search_player(self, name):
         if name not in self.players:
             p = Player(name)
