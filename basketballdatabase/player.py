@@ -46,6 +46,9 @@ class Player(object):
         self.__gamelog = None
         self.last_updated =datetime.min
 
+    def apply_statistic(self, name, func):
+        self.gamelog[name] = func(self.gamelog)
+
     def __links_to_player_season_gamelogs(self, after=None):
         pg = requests.get(self._player_url)
         pg.raise_for_status()

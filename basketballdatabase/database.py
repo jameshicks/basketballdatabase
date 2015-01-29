@@ -10,6 +10,10 @@ class Database(object):
     def nplayers(self):
         return len(self.players)
 
+    def apply_statistic(self, name, func):
+        for p in self.players.values():
+            p.apply_statistic(name, func)
+
     def search_player(self, name):
         if name not in self.players:
             p = Player(name)
