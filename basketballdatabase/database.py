@@ -20,6 +20,9 @@ class Database(object):
             self.players[p.name] = p
         return p
 
+    def remove_player(self, name):
+        del self.players[name]
+
     def save(self, filename):
         with gzip.open(filename, 'w') as f:
             pickle.dump(self, f, pickle.HIGHEST_PROTOCOL)
