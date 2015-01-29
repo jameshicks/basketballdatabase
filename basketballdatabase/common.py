@@ -49,7 +49,16 @@ def search_player(playername):
     pg.raise_for_status()
 
     if 'player' in pg.url:
+        # We've been redirected to the player page because it was the only 
+        # result in professional basketball
         return pg.url
+    soup = BeautifulSoup(pg.text)
+    
+    search_results = soup.find_all(class_='search-item')
+    for result in search_results:
+        for tag in result.find_all(lambda x: x.name=='a' and 'players' in x.get('href')):
+            if tag.string.lower().startswith(playername.lower()):
+                return relativeurl_to_absolute(tag.get('href'))
     else:
         raise ValueError('No player or non-unique player: {}'.format(playername))
         soup = BeautifulSoup(pg.text)
