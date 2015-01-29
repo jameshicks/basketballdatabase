@@ -56,7 +56,8 @@ def search_player(playername):
     
     search_results = soup.find_all(class_='search-item')
     for result in search_results:
-        for tag in result.find_all(lambda x: x.name=='a' and 'players' in x.get('href')):
+        for tag in result.find_all(lambda x: x.name=='a' and
+                                   'players' in x.get('href') and 'nbdl' not in x.get('href')):
             if tag.string.lower().startswith(playername.lower()):
                 return relativeurl_to_absolute(tag.get('href'))
     else:
