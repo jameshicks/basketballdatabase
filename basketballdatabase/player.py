@@ -61,7 +61,8 @@ class Player(object):
             self.updated_name = True
 
         links = (link for link in soup.find_all('a')
-                 if 'gamelog' in link.get('href'))
+                 if link.get('href') is not None
+                 and 'gamelog' in link.get('href'))
         if after:
             links = ifilter(lambda x: x.text >= after, links)
 
