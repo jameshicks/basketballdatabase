@@ -31,5 +31,9 @@ class Database(object):
         for player in self.players.values():
             player.update()
 
+    @property
+    def player_gamelogs(self):
+        return pd.concat([x.gamelog for x in db.players.values()])
+
 if __name__ == '__main__':
     import IPython; IPython.embed()
