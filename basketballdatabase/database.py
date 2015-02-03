@@ -1,6 +1,8 @@
 import cPickle as pickle
 import gzip
 
+import pandas as pd
+
 from player import Player
 
 class Database(object):
@@ -33,7 +35,7 @@ class Database(object):
 
     @property
     def player_gamelogs(self):
-        return pd.concat([x.gamelog for x in db.players.values()])
+        return pd.concat([x.gamelog for x in self.players.values()])
 
 if __name__ == '__main__':
     import IPython; IPython.embed()
