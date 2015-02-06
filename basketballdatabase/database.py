@@ -25,7 +25,7 @@ class Database(object):
         if name not in self.players:
             p = Player(name)
             self.players[p.name] = p
-        return p
+        return self.players[name]
 
     def search_team(self, abbrev):
         if abbrev not in self.teams:
