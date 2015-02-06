@@ -4,13 +4,18 @@ import gzip
 import pandas as pd
 
 from player import Player
+from team import Team
 
 class Database(object):
     def __init__(self):
         self.players = dict()
+        self.teams = dict()
 
     def nplayers(self):
         return len(self.players)
+
+    def nteams(self):
+        return len(self.teams)
 
     def apply_statistic(self, name, func):
         for p in self.players.values():
@@ -21,6 +26,12 @@ class Database(object):
             p = Player(name)
             self.players[p.name] = p
         return p
+
+    def search_team(self, abbrev):
+        if abbrev not in self.teams:
+            t = Team(abbrev=abbrev)
+            self.teams[t.abbrev] = t
+        return self.teams[abbrev]
 
     def remove_player(self, name):
         del self.players[name]
@@ -36,6 +47,10 @@ class Database(object):
     @property
     def player_gamelogs(self):
         return pd.concat([x.gamelog for x in self.players.values()])
+
+    @property
+    def team_gamelogs(self):
+        return pd.concat([x.gamelog for x in self.teams.values()])
 
 if __name__ == '__main__':
     import IPython; IPython.embed()
