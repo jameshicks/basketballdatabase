@@ -26,6 +26,9 @@ class Team(object):
         self.gamelog = None
         self.last_updated = datetime.datetime.min
 
+    def __repr__(self):
+        return 'Team: {}'.format(self.abbrev)
+
     def update(self, force=False):
         if (not force) and (datetime.datetime.now() - self.last_updated) < minimum_update_interval:
             return
