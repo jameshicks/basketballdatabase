@@ -41,6 +41,10 @@ class Team(object):
             self.gamelog = self._get_gamelog()
         self.last_updated = datetime.datetime.now()
 
+    def clear(self):
+        self.gamelog = None
+        self.last_updated = datetime.datetime.min
+
     @throttled
     def _links_to_gamelogs(self, after=None):
         pg = requests.get(self.url)
