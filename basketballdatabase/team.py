@@ -123,7 +123,12 @@ class Team(object):
         stats.columns = nc
 
         stats['Date'] = pd.to_datetime(stats['Date'], coerce=True)
-        stats['Away'] = stats['Away'] == '@'
+        try:
+            stats['Away'] = stats['Away'] == '@'
+        except TypeError:
+            # the previous raises a valueerror if all playoff games are at home
+            # which happened for boston in the 1947-48 season
+            stats['Away'] = 0
         stats['Margin'] = stats.TmPTS - stats.OppPTS
         stats['Win'] = stats.Margin > 0 
         stats['OT'] = get_OTs(stats['W/L'])
