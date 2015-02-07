@@ -47,7 +47,6 @@ class Team(object):
         seasonlinks = soup.find_all(name='a',
                                     href=re.compile(r'^/teams/[a-zA-Z]{3}/\d*\.html$'),
                                     text=re.compile(r'\d{4}-\d{2}'))
-        import ipdb; ipdb.set_trace()
         seasonlinks = [x for x in seasonlinks if x.string >= after]
         seasonlinks = sorted(set(seasonlinks))
         seasonlinks = [x.get('href').replace('.html','/gamelog/') for x in seasonlinks]
