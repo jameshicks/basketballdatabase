@@ -45,6 +45,16 @@ class Database(object):
             player.update()
 
     @property
+    def observed_teams(self):
+        def obteams(player):
+            if player.gamelog is None:
+                return set()
+            return set.union(set(player.gamelog.Tm), set(player.gamelog.Opp))
+        teams = reduce(set.union, (obteams(x) for x in self.players.values()))
+        teams = set.union(teams, set(self.teams.keys()))
+        return teams
+
+    @property
     def player_gamelogs(self):
         return pd.concat([x.gamelog for x in self.players.values()])
 
