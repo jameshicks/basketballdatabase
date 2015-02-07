@@ -72,12 +72,12 @@ class Team(object):
         stats = self.merge_basic_and_advanced(basic, advanced)
         stats['Playoff'] = 0
 
-        if soup.find('tgl_basic_playoffs'):
+        if soup.find(id='tgl_basic_playoffs'):
             pbasic = self.process_gamelog(soup.find(id='tgl_basic_playoffs'))
             padvanced = self.process_gamelog(soup.find(id='tgl_advanced_playoffs'))
             pstats = self.merge_basic_and_advanced(pbasic, padvanced)
             pstats['Playoff'] = 1
-            stats = pd.concat(stats, pstats, axis=0)
+            stats = pd.concat([stats, pstats], axis=0)
 
         season = soup.find(lambda x: x.name == 'h1' and 'Team Game Log' in x.string)
         season = season.string.split()[0]
