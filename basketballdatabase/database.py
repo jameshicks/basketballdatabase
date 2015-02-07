@@ -40,9 +40,17 @@ class Database(object):
         with gzip.open(filename, 'w') as f:
             pickle.dump(self, f, pickle.HIGHEST_PROTOCOL)
 
-    def update(self):
+    def update_players(self):
         for player in self.players.values():
             player.update()
+    
+    def update_teams(self):
+        for team in self.teams.values():
+            team.update()
+
+    def update(self):
+        self.update_players()
+        self.update_teams()
 
     @property
     def observed_teams(self):
