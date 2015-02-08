@@ -37,7 +37,7 @@ class Database(object):
         del self.players[name]
 
     def save(self, filename):
-        with gzip.open(filename, 'w') as f:
+        with gzip.open(filename, 'w', compresslevel=6) as f:
             pickle.dump(self, f, pickle.HIGHEST_PROTOCOL)
 
     def update_players(self):
