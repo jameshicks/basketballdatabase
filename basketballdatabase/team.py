@@ -86,7 +86,8 @@ class Team(object):
         season = soup.find(lambda x: x.name == 'h1' and 'Team Game Log' in x.string)
         season = season.string.split()[0]
         stats['Season'] = season
-        
+        stats['Tm'] = self.abbrev
+
         stats.drop([x for x in stats.columns if x.startswith('Unnamed') or x == 'W/L'], 
                    inplace=True, axis=1)
         stats.set_index('Date', inplace=True, drop=False)
