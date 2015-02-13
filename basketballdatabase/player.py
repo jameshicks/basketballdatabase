@@ -18,18 +18,12 @@ class Player(object):
         self.name = name
         self.updated_name = False
 
-        self._gamelog = None
+        self.gamelog = None
         self.last_updated = datetime.min
         self._player_url = search_player(self.name)
         
     def __repr__(self):
         return 'Player: {}'.format(self.name)
-
-    @property
-    def gamelog(self):
-        if self._gamelog is None:
-            self._gamelog = self.__get_gamelog()
-        return self._gamelog
 
     def update(self, force=False):
         if (not force) and (datetime.now() - self.last_updated) < minimum_update_interval:
@@ -38,12 +32,12 @@ class Player(object):
         curseason = self.gamelog.Season.max()
         prevseasons = self.gamelog[self.gamelog.Season < curseason]
         newseasons = self.__get_gamelog(after=curseason)
-        self._gamelog = consolidate_dfs([prevseasons, newseasons])
-        self._gamelog.sort('Date', inplace=True)
-        self._gamelog.set_index('Date', drop=False, inplace=True)
+        self.gamelog = consolidate_dfs([prevseasons, newseasons])
+        self.gamelog.sort('Date', inplace=True)
+        self.gamelog.set_index('Date', drop=False, inplace=True)
 
     def clear(self):
-        self.__gamelog = None
+        self.gamelog = None
         self.last_updated =datetime.min
 
     def apply_statistic(self, name, func):
